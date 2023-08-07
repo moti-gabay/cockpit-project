@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { CgArrowUp } from "react-icons/cg";
+import { Socket } from "socket.io-client";
 
 const Visual = (props) => {
   const [greenUp, setGreenUp] = useState(false);
   const [greenDown, setGreenDown] = useState(false);
   const [blueDown, setBlueDown] = useState(false);
   const [blueUp, setBlueUp] = useState(false);
-  let adi = props.data.ADI;
-  let alt = props.data.Altitude / 10;
+  const { Altitude, HIS, ADI } = props.data;
+  let adi = Number(ADI);
 
  useEffect(() => {
+  
     if (adi === -100) {
       setGreenUp(true);
       setGreenDown(true);
@@ -25,23 +27,24 @@ const Visual = (props) => {
       setBlueDown(false);
       setGreenDown(true);
       setGreenUp(false);
-    } else if (adi !== 100 && adi && -100 && adi !== 0) {
+    }else if (adi !== 100 && adi && -100 && adi !== 0) {
       setBlueUp(false);
       setBlueDown(false);
       setGreenDown(false);
       setGreenUp(false);
     }
-  }, [adi]);
+  }, [Socket,adi]);
+  let alt = Altitude / 10;
   if (alt === 300) {
     alt = 290;
   }
   return (
     <div className="text-white flex justify-between items-center  w-[600px]">
-      {/* <--- Altitude start --> */}
+      {/* <--- Altitude  --> */}
 
       <div className="m-5 text-lg text-center relative  font-medium w-[50px] h-[300px] border-[3px] bg-slate-400 text-black  ">
         <div className="h-[30%]">3000</div>
-        {alt > 300 || (alt < 0 && <p>enter number between 0 to 3000</p>)}
+        {Altitude > 3000 &&  <p>enter number between 0 to 3000</p>}
 
         <div className="h-[30%]">2000</div>
         <div className="h-[30%]">1000</div>
@@ -63,10 +66,10 @@ const Visual = (props) => {
       </div>
 
       <div
-        style={{ rotate: `${props.data.HIS - 360}deg` }}
+        style={{ rotate: `${HIS - 360}deg` }}
         className="rotate- border-4 relative  text-black font-bold justify-center items-center pb-7 text-lg  bg-slate-400 rounded-full w-[200px] h-[200px]"
       >
-        {props.data.HIS > 360 && <p>enter numbers between 0 to 360</p>}
+        {HIS > 360 && <p>enter numbers between 0 to 360</p>}
 
         <div className="h-[50%]   items-start justify-center flex">0</div>
         <div className="flex justify-between  ">
